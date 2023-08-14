@@ -1,7 +1,9 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
 import { EnumUserType } from '@prisma/client';
+import { ConfigService } from '@nestjs/config';
 
 interface ISignupParams {
   name: string;
@@ -12,7 +14,10 @@ interface ISignupParams {
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
   async signup({ email, password, name, phone }: ISignupParams) {
     const userExists = await this.prismaService.user.findFirst({
       where: {
@@ -35,6 +40,14 @@ export class AuthService {
       },
     });
 
-    return user;
+    const token = await jwt.sign(
+      { name, id: user.id },
+      this.configService.get('JWT_SECRET'),
+      {
+        expiresIn: '400d',
+      },
+    );
+
+    return { token };
   }
 }
