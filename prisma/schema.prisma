@@ -11,15 +11,17 @@ datasource db {
 }
 
 model User {
-  id         Int          @id @default(autoincrement())
-  name       String
-  phone      String
-  email      String
-  password   String
-  created_at DateTime     @default(now())
-  updated_at DateTime     @updatedAt
-  user_type  EnumUserType
-  homes      Home[]
+  id                Int          @id @default(autoincrement())
+  name              String
+  phone             String
+  email             String
+  password          String
+  created_at        DateTime     @default(now())
+  updated_at        DateTime     @updatedAt
+  user_type         EnumUserType
+  homes             Home[]
+  buyers_massages   Massage[]    @relation("buyers_massages")
+  realtors_massages Massage[]    @relation("realtors_massages")
 }
 
 model Home {
@@ -50,10 +52,14 @@ model Image {
 }
 
 model Massage {
-  id      Int    @id @default(autoincrement())
-  message String
-  home_id Int
-  home    Home   @relation(fields: [home_id], references: [id])
+  id         Int    @id @default(autoincrement())
+  message    String
+  home_id    Int
+  home       Home   @relation(fields: [home_id], references: [id])
+  realtor_id Int
+  realtor    User   @relation("buyers_massages", fields: [realtor_id], references: [id])
+  buyer_id   Int
+  buyer      User   @relation("realtors_massages", fields: [buyer_id], references: [id])
 }
 
 enum EnumPropertyType {
