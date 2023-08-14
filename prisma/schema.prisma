@@ -11,42 +11,49 @@ datasource db {
 }
 
 model User {
-  id                    Int       @id @default(autoincrement())
-  name                  String
-  phone                 String
-  email                 String
-  password              String
-  created_at            DateTime  @default(now())
-  updated_at            DateTime  @updatedAt
-  user_type             EnumUserType
+  id         Int          @id @default(autoincrement())
+  name       String
+  phone      String
+  email      String
+  password   String
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+  user_type  EnumUserType
+  homes      Home[]
 }
 
 model Home {
-  id                    Int       @id @default(autoincrement())
-  address               String
-  numbers_of_bedrooms   Int
-  numbers_of_bathrooms  Float
-  city                  String
-  listed_date           DateTime  @default(now())
-  price                 Float
-  land_size             Float
-  property_type         EnumPropertyType
-  created_at            DateTime  @default(now())
-  updated_at            DateTime  @updatedAt
+  id                   Int              @id @default(autoincrement())
+  address              String
+  numbers_of_bedrooms  Int
+  numbers_of_bathrooms Float
+  city                 String
+  listed_date          DateTime         @default(now())
+  price                Float
+  land_size            Float
+  property_type        EnumPropertyType
+  created_at           DateTime         @default(now())
+  updated_at           DateTime         @updatedAt
+  images               Image[]
+  realtor_id           Int
+  realtor              User             @relation(fields: [realtor_id], references: [id])
+  massage              Massage[]
 }
 
 model Image {
-  id      Int       @id @default(autoincrement())
-  url     String
-  created_at            DateTime  @default(now())
-  updated_at            DateTime  @updatedAt
+  id         Int      @id @default(autoincrement())
+  url        String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  home_id    Int
+  home       Home     @relation(fields: [home_id], references: [id])
 }
 
 model Massage {
-  id                    Int       @id @default(autoincrement())
-  message               String
-  created_at            DateTime  @default(now())
-  updated_at            DateTime  @updatedAt
+  id      Int    @id @default(autoincrement())
+  message String
+  home_id Int
+  home    Home   @relation(fields: [home_id], references: [id])
 }
 
 enum EnumPropertyType {
