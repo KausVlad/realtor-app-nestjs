@@ -1,8 +1,8 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsPhoneNumber,
   IsString,
-  Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -12,7 +12,10 @@ export class SignupDto {
   @IsNotEmpty()
   name: string;
 
-  @Matches(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/)
+  // @Matches(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/, {
+  //   message: 'Phone must be a valid phone number',
+  // })
+  @IsPhoneNumber()
   phone: string;
 
   @IsEmail()
