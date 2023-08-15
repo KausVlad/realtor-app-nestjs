@@ -26,3 +26,11 @@ export class SignupDto {
   @MaxLength(20)
   password: string;
 }
+
+export class SignInDto {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  password: string;
+}
