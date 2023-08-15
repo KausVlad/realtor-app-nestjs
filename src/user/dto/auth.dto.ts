@@ -1,5 +1,7 @@
+import { EnumUserType } from '@prisma/client';
 import {
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsPhoneNumber,
   IsString,
@@ -33,4 +35,12 @@ export class SignInDto {
 
   @IsString()
   password: string;
+}
+
+export class GenerateProductKeyDto {
+  @IsEmail()
+  email: string;
+
+  @IsEnum(EnumUserType)
+  userType: EnumUserType;
 }
