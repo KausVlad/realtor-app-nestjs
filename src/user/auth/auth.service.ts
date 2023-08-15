@@ -23,7 +23,10 @@ export class AuthService {
     private readonly prismaService: PrismaService,
     private readonly configService: ConfigService,
   ) {}
-  async signup({ email, password, name, phone }: ISignupParams) {
+  async signup(
+    { email, password, name, phone }: ISignupParams,
+    userType: EnumUserType,
+  ) {
     const userExists = await this.prismaService.user.findFirst({
       where: {
         email: email,
@@ -41,7 +44,7 @@ export class AuthService {
         phone,
         email,
         password: hashedPassword,
-        user_type: EnumUserType.BUYER,
+        user_type: userType,
       },
     });
 
