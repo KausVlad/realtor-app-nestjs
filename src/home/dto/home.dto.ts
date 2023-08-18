@@ -5,6 +5,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsPositive,
   IsString,
   ValidateNested,
@@ -105,4 +106,40 @@ export class CreateHomeDto {
   @ValidateNested({ each: true })
   @Type(() => Image)
   images: Image[];
+}
+
+export class UpdateHomeDto {
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  address?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  city?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  price?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  landSize?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  numbersFBathrooms?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  numbersOfBedrooms?: number;
+
+  @IsOptional()
+  @IsEnum(EnumPropertyType)
+  propertyType?: EnumPropertyType;
 }

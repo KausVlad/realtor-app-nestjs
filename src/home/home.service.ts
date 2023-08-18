@@ -23,6 +23,9 @@ interface ICreateHomeParams {
   images: { url: string }[];
 }
 
+interface IUpdateHomeParams
+  extends Omit<Partial<ICreateHomeParams>, 'images'> {}
+
 const homeSelect = {
   id: true,
   address: true,
@@ -125,5 +128,26 @@ export class HomeService {
     });
 
     return new HomeResponseDto(home);
+  }
+
+  async updateHomeById(id: number, data: IUpdateHomeParams) {
+    const home = await this.prismaService.home.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!home) {
+      throw new NotFoundException('Home not found');
+    }
+
+    const updateHome = await this.prismaService.home.update({
+      where: {
+        id: id,
+      },
+      data,
+    });
+
+    return new HomeResponseDto(updateHome);
   }
 }
