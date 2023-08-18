@@ -1,7 +1,8 @@
 import { EnumPropertyType } from '@prisma/client';
-import { HomeResponseDto } from './dto/home.dto';
+import { CreateHomeDto, HomeResponseDto } from './dto/home.dto';
 import { HomeService } from './home.service';
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -43,8 +44,8 @@ export class HomeController {
   }
 
   @Post()
-  createHome() {
-    return {};
+  createHome(@Body() body: CreateHomeDto) {
+    return this.homeService.createHome(body);
   }
 
   @Put(':id')

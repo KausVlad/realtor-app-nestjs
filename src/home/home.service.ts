@@ -12,6 +12,17 @@ interface IGetHomesParams {
   };
 }
 
+interface ICreateHomeParams {
+  address: string;
+  city: string;
+  price: number;
+  landSize: number;
+  numbersFBathrooms: number;
+  numbersOfBedrooms: number;
+  propertyType: EnumPropertyType;
+  images: { url: string }[];
+}
+
 const homeSelect = {
   id: true,
   address: true,
@@ -79,6 +90,40 @@ export class HomeService {
     if (!home) {
       throw new NotFoundException('Home not found');
     }
+    return new HomeResponseDto(home);
+  }
+
+  async createHome({
+    address,
+    city,
+    price,
+    landSize,
+    numbersFBathrooms,
+    numbersOfBedrooms,
+    propertyType,
+    images,
+  }: ICreateHomeParams) {
+    const home = await this.prismaService.home.create({
+      data: {
+        address,
+        city,
+        price,
+        land_size: landSize,
+        numbers_of_bathrooms: numbersFBathrooms,
+        numbers_of_bedrooms: numbersOfBedrooms,
+        property_type: propertyType,
+        realtor_id: 4,
+      },
+    });
+
+    const homeImages = images.map((image) => {
+      return { ...image, home_id: home.id };
+    });
+
+    await this.prismaService.image.createMany({
+      data: homeImages,
+    });
+
     return new HomeResponseDto(home);
   }
 }
