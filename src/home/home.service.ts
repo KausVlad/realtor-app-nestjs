@@ -150,4 +150,30 @@ export class HomeService {
 
     return new HomeResponseDto(updateHome);
   }
+
+  async deleteHome(id: number) {
+    const deletedHome = await this.prismaService.home.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!deletedHome) {
+      throw new NotFoundException('Home not found');
+    }
+
+    await this.prismaService.image.deleteMany({
+      where: {
+        home_id: id,
+      },
+    });
+
+    await this.prismaService.home.delete({
+      where: {
+        id,
+      },
+    });
+
+    return { deletedHome: new HomeResponseDto(deletedHome) };
+  }
 }
