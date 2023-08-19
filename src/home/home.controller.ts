@@ -12,10 +12,8 @@ import {
   Put,
   Query,
   UnauthorizedException,
-  UseGuards,
 } from '@nestjs/common';
 import { IUserInfo, UserInfo } from 'src/user/decorators/user.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
 import { UserRoles } from 'src/decorators/roles.decorator';
 // import { Roles } from 'src/decorators/roles.decorator';
 
@@ -51,7 +49,6 @@ export class HomeController {
   }
 
   @UserRoles(EnumUserType.REALTOR)
-  @UseGuards(AuthGuard)
   @Post()
   createHome(@Body() body: CreateHomeDto, @UserInfo() user: IUserInfo) {
     return this.homeService.createHome(body, user.id);
@@ -62,7 +59,6 @@ export class HomeController {
   // realtor eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImdyZWszIiwiaWQiOjYsImlhdCI6MTY5MjQ2ODIyMCwiZXhwIjoxNjkzMDczMDIwfQ.x1HLoGzagjGIZM0Qa7NA8NzMIPIXKuBqxPx0W_0g6hY
 
   @UserRoles(EnumUserType.REALTOR)
-  @UseGuards(AuthGuard)
   @Put(':id')
   async updateHomeById(
     @Param('id', ParseIntPipe) id: number,
@@ -77,7 +73,6 @@ export class HomeController {
   }
 
   @UserRoles(EnumUserType.REALTOR)
-  @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteHome(
     @Param('id', ParseIntPipe) id: number,
