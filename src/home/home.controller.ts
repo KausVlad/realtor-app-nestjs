@@ -1,5 +1,10 @@
 import { EnumPropertyType, EnumUserType } from '@prisma/client';
-import { CreateHomeDto, HomeResponseDto, UpdateHomeDto } from './dto/home.dto';
+import {
+  CreateHomeDto,
+  HomeResponseDto,
+  InquireDto,
+  UpdateHomeDto,
+} from './dto/home.dto';
 import { HomeService } from './home.service';
 import {
   Body,
@@ -83,5 +88,15 @@ export class HomeController {
       throw new UnauthorizedException('You are not the realtor of this home');
     }
     return this.homeService.deleteHome(id);
+  }
+
+  @UserRoles(EnumUserType.BUYER)
+  @Post('inquire/:homeId')
+  inquire(
+    @Param('homeId', ParseIntPipe) homeId: number,
+    @UserInfo() user: IUserInfo,
+    @Body() { message }: InquireDto,
+  ) {
+    return this.homeService.inquire(user, homeId, message);
   }
 }

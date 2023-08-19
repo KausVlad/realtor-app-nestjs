@@ -20,8 +20,8 @@ model User {
   updated_at        DateTime     @updatedAt
   user_type         EnumUserType
   homes             Home[]
-  buyers_massages   Massage[]    @relation("buyers_massages")
-  realtors_massages Massage[]    @relation("realtors_massages")
+  buyers_messages   Message[]    @relation("buyers_messages")
+  realtors_messages Message[]    @relation("realtors_messages")
 }
 
 model Home {
@@ -39,7 +39,7 @@ model Home {
   images               Image[]
   realtor_id           Int
   realtor              User             @relation(fields: [realtor_id], references: [id])
-  massage              Massage[]
+  message              Message[]
 }
 
 model Image {
@@ -51,15 +51,15 @@ model Image {
   home       Home     @relation(fields: [home_id], references: [id])
 }
 
-model Massage {
+model Message {
   id         Int    @id @default(autoincrement())
   message    String
   home_id    Int
   home       Home   @relation(fields: [home_id], references: [id])
   realtor_id Int
-  realtor    User   @relation("buyers_massages", fields: [realtor_id], references: [id])
+  realtor    User   @relation("buyers_messages", fields: [realtor_id], references: [id])
   buyer_id   Int
-  buyer      User   @relation("realtors_massages", fields: [buyer_id], references: [id])
+  buyer      User   @relation("realtors_messages", fields: [buyer_id], references: [id])
 }
 
 enum EnumPropertyType {
