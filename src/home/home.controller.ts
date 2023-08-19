@@ -12,6 +12,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { User } from 'src/user/decorators/user.decorator';
 
 @Controller('home')
 export class HomeController {
@@ -45,7 +46,8 @@ export class HomeController {
   }
 
   @Post()
-  createHome(@Body() body: CreateHomeDto) {
+  createHome(@Body() body: CreateHomeDto, @User() user) {
+    return user;
     return this.homeService.createHome(body);
   }
 
