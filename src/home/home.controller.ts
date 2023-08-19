@@ -11,6 +11,7 @@ import {
   Post,
   Put,
   Query,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { IUserInfo, UserInfo } from 'src/user/decorators/user.decorator';
 
@@ -51,15 +52,27 @@ export class HomeController {
   }
 
   @Put(':id')
-  updateHomeById(
+  async updateHomeById(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateHomeDto,
+    @UserInfo() user: IUserInfo,
   ) {
+    const { realtor } = await this.homeService.getRealtorByHomeId(id);
+    if (realtor.id !== user.id) {
+      throw new UnauthorizedException('You are not the realtor of this home');
+    }
     return this.homeService.updateHomeById(id, body);
   }
 
   @Delete(':id')
-  deleteHome(@Param('id', ParseIntPipe) id: number) {
+  async deleteHome(
+    @Param('id', ParseIntPipe) id: number,
+    @UserInfo() user: IUserInfo,
+  ) {
+    const { realtor } = await this.homeService.getRealtorByHomeId(id);
+    if (realtor.id !== user.id) {
+      throw new UnauthorizedException('You are not the realtor of this home');
+    }
     return this.homeService.deleteHome(id);
   }
 }
