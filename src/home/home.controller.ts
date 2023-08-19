@@ -1,4 +1,4 @@
-import { EnumPropertyType } from '@prisma/client';
+import { EnumPropertyType, EnumUserType } from '@prisma/client';
 import { CreateHomeDto, HomeResponseDto, UpdateHomeDto } from './dto/home.dto';
 import { HomeService } from './home.service';
 import {
@@ -12,8 +12,12 @@ import {
   Put,
   Query,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { IUserInfo, UserInfo } from 'src/user/decorators/user.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { UserRoles } from 'src/decorators/roles.decorator';
+// import { Roles } from 'src/decorators/roles.decorator';
 
 @Controller('home')
 export class HomeController {
@@ -46,11 +50,19 @@ export class HomeController {
     return this.homeService.getHomeById(id);
   }
 
+  @UserRoles(EnumUserType.REALTOR)
+  @UseGuards(AuthGuard)
   @Post()
   createHome(@Body() body: CreateHomeDto, @UserInfo() user: IUserInfo) {
     return this.homeService.createHome(body, user.id);
   }
 
+  // buyer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImdyZWs0IiwiaWQiOjcsImlhdCI6MTY5MjQ2OTU5NywiZXhwIjoxNjkzMDc0Mzk3fQ.o98EFeo9kCg_Wti1SowfZHtSTN1xlAkAdWcLWYVZb1A
+
+  // realtor eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImdyZWszIiwiaWQiOjYsImlhdCI6MTY5MjQ2ODIyMCwiZXhwIjoxNjkzMDczMDIwfQ.x1HLoGzagjGIZM0Qa7NA8NzMIPIXKuBqxPx0W_0g6hY
+
+  @UserRoles(EnumUserType.REALTOR)
+  @UseGuards(AuthGuard)
   @Put(':id')
   async updateHomeById(
     @Param('id', ParseIntPipe) id: number,
@@ -64,6 +76,8 @@ export class HomeController {
     return this.homeService.updateHomeById(id, body);
   }
 
+  @UserRoles(EnumUserType.REALTOR)
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteHome(
     @Param('id', ParseIntPipe) id: number,

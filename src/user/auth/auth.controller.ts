@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseEnumPipe,
   Post,
@@ -11,6 +12,7 @@ import { GenerateProductKeyDto, SignInDto, SignupDto } from '../dto/auth.dto';
 import { EnumUserType } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import { IUserInfo, UserInfo } from '../decorators/user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -52,5 +54,10 @@ export class AuthController {
   @Post('key')
   generateProductKey(@Body() { email, userType }: GenerateProductKeyDto) {
     return this.authService.generateProductKey(email, userType);
+  }
+
+  @Get('me')
+  getMe(@UserInfo() user: IUserInfo) {
+    return user;
   }
 }
