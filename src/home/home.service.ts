@@ -217,4 +217,22 @@ export class HomeService {
       },
     });
   }
+
+  getMessagesByHome(homeId: number) {
+    return this.prismaService.message.findMany({
+      where: {
+        home_id: homeId,
+      },
+      select: {
+        message: true,
+        buyer: {
+          select: {
+            name: true,
+            email: true,
+            phone: true,
+          },
+        },
+      },
+    });
+  }
 }

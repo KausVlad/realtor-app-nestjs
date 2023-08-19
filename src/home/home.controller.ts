@@ -61,7 +61,7 @@ export class HomeController {
 
   // buyer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImdyZWs0IiwiaWQiOjcsImlhdCI6MTY5MjQ2OTU5NywiZXhwIjoxNjkzMDc0Mzk3fQ.o98EFeo9kCg_Wti1SowfZHtSTN1xlAkAdWcLWYVZb1A
 
-  // realtor eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImdyZWszIiwiaWQiOjYsImlhdCI6MTY5MjQ2ODIyMCwiZXhwIjoxNjkzMDczMDIwfQ.x1HLoGzagjGIZM0Qa7NA8NzMIPIXKuBqxPx0W_0g6hY
+  // realtor eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImdyZWszIiwiaWQiOjYsImlhdCI6MTY5MjQ4ODEzNCwiZXhwIjoxNjkzMDkyOTM0fQ.AIIoQR0-RC-ccA3e2hytfUl4gTLbsS0tWVj39mdSRa8
 
   @UserRoles(EnumUserType.REALTOR)
   @Put(':id')
@@ -91,12 +91,25 @@ export class HomeController {
   }
 
   @UserRoles(EnumUserType.BUYER)
-  @Post('inquire/:homeId')
+  @Post(':homeId/inquire')
   inquire(
     @Param('homeId', ParseIntPipe) homeId: number,
     @UserInfo() user: IUserInfo,
     @Body() { message }: InquireDto,
   ) {
     return this.homeService.inquire(user, homeId, message);
+  }
+
+  @UserRoles(EnumUserType.REALTOR)
+  @Get(':homeId/messages')
+  async getHomeMessages(
+    @Param('homeId', ParseIntPipe) homeId: number,
+    @UserInfo() user: IUserInfo,
+  ) {
+    const { realtor } = await this.homeService.getRealtorByHomeId(homeId);
+    if (realtor.id !== user.id) {
+      throw new UnauthorizedException('You are not the realtor of this home');
+    }
+    return this.homeService.getMessagesByHome(homeId);
   }
 }
