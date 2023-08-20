@@ -65,7 +65,7 @@ export class HomeController {
 
   @UserRoles(EnumUserType.REALTOR)
   @Put(':id')
-  async updateHomeById(
+  async updateHome(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateHomeDto,
     @UserInfo() user: IUserInfo,
