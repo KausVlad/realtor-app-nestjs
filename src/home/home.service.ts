@@ -27,7 +27,7 @@ interface ICreateHomeParams {
 interface IUpdateHomeParams
   extends Omit<Partial<ICreateHomeParams>, 'images'> {}
 
-const homeSelect = {
+export const homeSelect = {
   id: true,
   address: true,
   city: true,
@@ -44,13 +44,7 @@ export class HomeService {
   async getHomes(filters: IGetHomesParams): Promise<HomeResponseDto[]> {
     const homes = await this.prismaService.home.findMany({
       select: {
-        id: true,
-        address: true,
-        city: true,
-        numbers_of_bedrooms: true,
-        numbers_of_bathrooms: true,
-        price: true,
-        property_type: true,
+        ...homeSelect,
         images: {
           select: {
             url: true,
